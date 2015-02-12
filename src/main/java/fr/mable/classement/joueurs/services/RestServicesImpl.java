@@ -4,8 +4,9 @@ import fr.mable.classement.joueurs.services.impl.PlayerComposite;
 import fr.mable.classement.joueurs.data.dao.IPlayerDao;
 import fr.mable.classement.joueurs.data.entities.Player;
 import fr.mable.classement.joueurs.data.factories.PlayerFactory;
-import fr.mable.classement.joueurs.services.WS.WSClassement;
+import fr.mable.classement.joueurs.services.WS.WSPlayerResponse;
 import fr.mable.classement.joueurs.services.WS.WSResponse;
+import fr.mable.classement.joueurs.services.WS.WSClassementResponse;
 import java.util.logging.Logger;
 
 import java.util.logging.Level;
@@ -18,6 +19,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
 /**
+ * Services Rest
  *
  * @author mable
  */
@@ -26,10 +28,10 @@ import javax.ws.rs.Produces;
 public class RestServicesImpl {
 
     /**
-     * Nombre de joueurs maximum à charger en mémoire. Devrait être
-     * paramétrable.
+     * Nombre de joueurs maximum à charger en mémoire. (Devrait être
+     * paramétrable).
      */
-    public final static int MAX_PLAYER = 1000;
+    public final static int MAX_PLAYER = 10000;
 
     @EJB
     IPlayerDao playerDao;
@@ -102,19 +104,20 @@ public class RestServicesImpl {
      * dans le tournoi)
      *
      * @param pseudo
-     * @return le joueursi celui-ci existe, null sinon
+     * @return WSPlayerResponse contenant le joueur si celui-ci existe
      */
     @GET
     @Path("/getPlayer/{pseudo}")
-    public PlayerComposite getPlayer(@PathParam("pseudo") String pseudo) {
+    public WSPlayerResponse getPlayer(@PathParam("pseudo") String pseudo) {
         PlayerComposite pc = PlayerFactory.getInstance().toPlayerComposite(playerDao.getPlayerByPseudo(pseudo));
         pc.setClassement(playerDao.getClassement(pc.getScore()));
 
-        return pc;
+        return new WSPlayerResponse(pc);
     }
 
     /**
-     * Récupère la liste de tous les joueurs classés par score
+     * Récupère la liste de tous les joueurs classés par score,entre les
+     * positions start et end
      *
      * @param start
      * @param end
@@ -123,24 +126,25 @@ public class RestServicesImpl {
     @GET
     @Path("/getClassement/{start}/{end}")
     @Produces({"application/json"})
-    public WSClassement getClassement(int start, int end) {
+    public WSClassementResponse getClassement(int start, int end) {
         LOGGER.log(Level.INFO, "Return classement");
-        WSClassement result = new WSClassement(playerDao.findRangeOrdered(start, end));
+        WSClassementResponse result = new WSClassementResponse(playerDao.findRangeOrdered(start, end));
         result.setTotal(playerDao.count());
         return result;
 
     }
 
     /**
-     * Récupère la liste de tous les joueurs classés par score
+     * Récupère la liste de tous les joueurs classés par score, dans la limite
+     * de MAX_PLAYER
      *
      * @return le classement total
      */
     @GET
     @Path("/getClassement/")
     @Produces({"application/json"})
-    public WSClassement getClassement() {
-        WSClassement result = new WSClassement(playerDao.findRangeOrdered(0, MAX_PLAYER));
+    public WSClassementResponse getClassement() {
+        WSClassementResponse result = new WSClassementResponse(playerDao.findRangeOrdered(0, MAX_PLAYER));
         result.setTotal(playerDao.count());
         return result;
     }

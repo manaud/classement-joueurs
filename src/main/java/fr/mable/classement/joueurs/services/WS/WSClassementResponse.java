@@ -1,8 +1,6 @@
 package fr.mable.classement.joueurs.services.WS;
 
-//import fr.mable.classement.joueurs.services.impl.Player;
 import fr.mable.classement.joueurs.data.entities.Player;
-import java.io.Serializable;
 import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -11,34 +9,45 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author mable
  */
 @XmlRootElement
-public class WSClassement implements Serializable {
+public class WSClassementResponse extends WSResponse {
 
+    /**
+     * Liste de joueurs triés par points, potentiellement incomplète
+     */
     private List<Player> players;
+
+    /**
+     * Nombre total de joueurs
+     */
     private int total;
 
     /**
-     *
+     * Default constructor
      */
-    public WSClassement() {
+    public WSClassementResponse() {
     }
 
     /**
+     * Constructor
      *
      * @param players
      */
-    public WSClassement(List<Player> players) {
+    public WSClassementResponse(List<Player> players) {
+        super(true);
         this.players = players;
     }
 
     /**
+     * Getter
      *
-     * @return
+     * @return players
      */
     public List<Player> getPlayers() {
         return players;
     }
 
     /**
+     * Setter
      *
      * @param players
      */
@@ -47,21 +56,21 @@ public class WSClassement implements Serializable {
     }
 
     /**
+     * Getter
      *
-     * @return
+     * @return total
      */
     public int getTotal() {
         return total;
     }
 
     /**
+     * Setter
      *
      * @param total
      */
     public void setTotal(int total) {
         this.total = total;
     }
-    
-    
 
 }

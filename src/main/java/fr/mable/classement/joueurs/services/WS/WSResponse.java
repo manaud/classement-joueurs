@@ -4,20 +4,23 @@ import java.io.Serializable;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
+ * Classe mère pour réponse au rest service
  *
  * @author mable
  */
 @XmlRootElement
-public class WSResponse implements Serializable{
+public class WSResponse implements Serializable {
+
     private boolean success;
-    
+
     /**
-     *
+     * Default constructor
      */
     public WSResponse() {
     }
 
     /**
+     * Constructor
      *
      * @param success
      */
@@ -26,20 +29,21 @@ public class WSResponse implements Serializable{
     }
 
     /**
+     * Getter
      *
-     * @return
+     * @return success
      */
     public boolean isSuccess() {
         return success;
     }
 
     /**
+     * Setter
      *
      * @param success
      */
     public void setSuccess(boolean success) {
         this.success = success;
     }
-   
-    
+
 }
