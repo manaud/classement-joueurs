@@ -87,7 +87,7 @@ public class RestServicesImpl {
      * @return WSResponse indiquant la reussite ou non
      */
     @POST
-    @Path("/updatePlayer/{pseudo}/{score}")
+    @Path("/updatePlayer/{pseudo}/{score:[0-9]+}")
     public WSResponse updatePlayer(@PathParam("pseudo") String pseudo, @PathParam("score") int score) {
 
         if (playerDao.playerExiste(pseudo)) {
@@ -124,7 +124,7 @@ public class RestServicesImpl {
      * @return le joueursi celui-ci existe, null sinon
      */
     @GET
-    @Path("/getClassement/{start}/{end}")
+    @Path("/getClassement/{start:[0-9]+}/{end:[0-9]+}")
     @Produces({"application/json"})
     public WSClassementResponse getClassement(int start, int end) {
         LOGGER.log(Level.INFO, "Return classement");
@@ -156,7 +156,6 @@ public class RestServicesImpl {
      */
     @POST
     @Path("/deleteAll/")
-    @Produces({"application/json"})
     public WSResponse deleteAll() {
         playerDao.removeAll();
         return new WSResponse(true);
